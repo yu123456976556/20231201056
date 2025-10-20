@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Single Page</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                max-width: 800px;
+                margin: 0 auto;
+                padding: 20px;
+                line-height: 1.6;
+            }
+            h1 {
+                color: #2c3e50;
+            }
+            button {
+                background-color: #3498db;
+                color: white;
+                border: none;
+                padding: 10px 15px;
+                margin-right: 10px;
+                cursor: pointer;
+                border-radius: 4px;
+                font-size: 14px;
+            }
+            button:hover {
+                background-color: #2980b9;
+            }
+            #content {
+                margin-top: 20px;
+                padding: 20px;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+                min-height: 100px;
+            }
+        </style>
+        <script>
+            // Shows given section
+            function showSection(section) {
+                // Find section text from server
+                fetch(`/sections/${section}`)
+                .then(response => response.text())
+                .then(text => {
+                    // Log text and display on page
+                    console.log(text);
+                    document.querySelector('#content').innerHTML = text;
+                });
+            }
+
+            // 使用History API更新URL
+            function navigateToSection(section) {
+                // 更新URL但不刷新页面
+                history.pushState({ section: section }, `Section ${section}`, `/${section}`);
+                // 加载对应内容
+                showSection(section);
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+                // Add button functionality
+                document.querySelectorAll('button').forEach(button => {
+                    button.onclick = function() {
+                        navigateToSection(this.dataset.section);
+                    };
+                });
+                
+                // 监听浏览器前进后退按钮
+                window.addEventListener('popstate', function(event) {
+                    if (event.state && event.state.section) {
+                        showSection(event.state.section);
+                    } else {
+                        // 如果没有状态，清空内容
+                        document.querySelector('#content').innerHTML = '请点击上方按钮查看内容';
+                    }
+                });
+                
+                // 页面加载时检查URL
+                const path = window.location.pathname;
+                if (path && path !== '/') {
+                    // 提取路径中的数字作为section ID
+                    const sectionId = path.substring(1);
+                    if (['1', '2', '3'].includes(sectionId)) {
+                        // 使用replaceState而不是pushState，避免在历史记录中添加新条目
+                        history.replaceState({ section: sectionId }, `Section ${sectionId}`, path);
+                        showSection(sectionId);
+                    }
+                }
+            });
+        </script>
+    </head>
+    <body>
+        <h1>Hello!</h1>
+        <button data-section="1">Section 1</button>
+        <button data-section="2">Section 2</button>
+        <button data-section="3">Section 3</button>
+        <div id="content">
+            请点击上方按钮查看内容
+        </div>
+    </body>
+</html>

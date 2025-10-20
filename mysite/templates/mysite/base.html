@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}我的网站{% endblock %}</title>
+    <!-- 可以在这里添加CSS链接 -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            color: #333;
+        }
+        header {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-bottom: 1px solid #eaeaea;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        footer {
+            background-color: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            border-top: 1px solid #eaeaea;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>{% block header_title %}网站标题{% endblock %}</h1>
+            <!-- 导航栏可以在这里添加 -->
+        </div>
+    </header>
+    
+    <main class="container">
+        {% block content %}
+        <!-- 主要内容区域 -->
+        {% endblock %}
+    </main>
+    
+    <footer>
+        <div class="container">
+            <p>&copy; {% now "Y" %} 我的网站. 保留所有权利.</p>
+        </div>
+    </footer>
+    
+    <!-- 可以在这里添加JavaScript脚本 -->
+    {% block scripts %}
+    {% endblock %}
+</body>
+</html>
